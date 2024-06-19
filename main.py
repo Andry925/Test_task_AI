@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request
 import uvicorn
-from langchain import SimpleSummarizer
+from AI_logic.summarizer import run_summarizer
 
 app = FastAPI()
 
@@ -8,8 +8,7 @@ app = FastAPI()
 async def summarize(request: Request):
     data = await request.json()
     text = data.get("text", "")
-    summarizer = SimpleSummarizer()
-    summary = summarizer.summarize(text)
+    summary = run_summarizer(text)
     return {"summary": summary}
 
 if __name__ == "__main__":
