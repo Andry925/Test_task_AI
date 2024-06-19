@@ -5,7 +5,7 @@ from langchain_community.llms import HuggingFaceHub
 
 
 def divide_text_on_chunks(text):
-    text_splitter = CharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+    text_splitter = CharacterTextSplitter(chunk_size=10, chunk_overlap=5)
     texts = text_splitter.split_text(text)
     return texts
 
@@ -32,7 +32,7 @@ def chain_document(docs):
 def run_summarizer(text_input):
     docs = convert_chunks_to_document(text_input=text_input)
     response = chain_document(docs)
-    yield response
+    yield response.strip()
 
 
 if __name__ == "__main__":
