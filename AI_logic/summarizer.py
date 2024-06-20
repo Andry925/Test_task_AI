@@ -13,6 +13,7 @@ class SimpleSummarizer:
         self.temperature = 0.5
         self.repo_id = 'facebook/bart-large-cnn'
 
+    # Split data on smaller chunks
     def divide_text_on_chunks(self, text):
         text_splitter = CharacterTextSplitter(
             chunk_size=self.chunk_size,
@@ -20,11 +21,13 @@ class SimpleSummarizer:
         texts = text_splitter.split_text(text)
         return texts
 
+    # Convert data into document format
     def convert_chunks_to_document(self, text_input):
         splited_text = self.divide_text_on_chunks(text=text_input)
         docs = [Document(page_content=text) for text in splited_text]
         return docs
 
+    # Loading llm
     def load_llm(self):
         llm = HuggingFaceHub(
             repo_id=self.repo_id,
@@ -33,11 +36,13 @@ class SimpleSummarizer:
                 'temperature': self.temperature})
         return llm
 
+    # Apply llm to your document
     def chain_document(self, docs):
         llm = self.load_llm()
         chain = load_summarize_chain(llm, chain_type='map_reduce')
         return chain.run(docs)
 
+    # Run your summarizer
     def run_summarizer(self, text_input):
         docs = self.convert_chunks_to_document(text_input=text_input)
         response = self.chain_document(docs)
